@@ -1,128 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UR Character Level Calculator</title>
+  <meta charset="UTF-8">
+  <title>UR Memory EXP & Ascension Calculator</title>
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #0a2a43, #011627);
-      color: #fff;
-      text-align: center;
       margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0a1c3a, #000d1a);
+      color: #ffffff;
     }
-
-    .container {
-      background: rgba(0, 0, 0, 0.6);
-      padding: 2rem 3rem;
-      border-radius: 20px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
-      width: 90%;
-      max-width: 450px;
-    }
-
     h1 {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 2em;
     }
-
-    .input-group {
-      margin-bottom: 1rem;
+    .container {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin: 20px;
+      gap: 20px;
     }
-
+    .card {
+      background: rgba(20, 30, 50, 0.85);
+      padding: 20px;
+      border-radius: 12px;
+      flex: 1;
+      min-width: 280px;
+    }
     label {
       display: block;
-      font-weight: bold;
-      margin-bottom: 0.3rem;
+      margin-top: 10px;
     }
-
-    input {
-      width: 80%;
-      padding: 0.5rem;
-      font-size: 1rem;
-      border-radius: 10px;
+    select, input[type=number] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 6px;
       border: none;
-      text-align: center;
+      background: #1a2a4a;
+      color: #ffffff;
     }
-
-    button {
-      background: #fff;
-      color: #e52e71;
-      border: none;
-      padding: 0.6rem 1.5rem;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-      margin-top: 1rem;
-      transition: all 0.2s ease;
+    select option {
+      background: #1a2a4a;
+      color: #ffffff;
     }
-
-    button:hover {
-      transform: scale(1.05);
-      background: #fefefe;
-    }
-
     .results {
-      margin-top: 1.5rem;
-      font-size: 1.2rem;
-      line-height: 1.8;
+      background: rgba(0,0,0,0.6);
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      width: 100%;
+      border-radius: 8px;
+      border: none;
+      background-color: #0055aa;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0077dd;
+    }
+    .details {
+      background: rgba(10,20,40,0.8);
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 10px;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>UR Character Level Calculator</h1>
-    <p>Calculate total EXP & Gold needed after using N Characters</p>
 
-    <div class="input-group">
-      <label for="threeStar">Number of 3★ N Characters:</label>
-      <input type="number" id="threeStar" placeholder="Enter amount..." />
-    </div>
+<h1>UR Memory EXP & Ascension Calculator</h1>
 
-    <div class="input-group">
-      <label for="fourStar">Number of 4★ N Characters:</label>
-      <input type="number" id="fourStar" placeholder="Enter amount..." />
-    </div>
+<div class="container">
+  <div class="card">
+    <h2>Level Selection</h2>
+    <label for="startLevel">Start Level:</label>
+    <select id="startLevel">
+      <option value="1">1</option>
+      <option value="20">20</option>
+      <option value="40">40</option>
+      <option value="60">60</option>
+      <option value="70">70</option>
+    </select>
 
-    <button onclick="calculate()">Calculate</button>
-
-    <div class="results" id="results"></div>
+    <label for="targetLevel">Target Level:</label>
+    <select id="targetLevel">
+      <option value="20">20</option>
+      <option value="40">40</option>
+      <option value="60">60</option>
+      <option value="70">70</option>
+      <option value="80">80</option>
+    </select>
   </div>
 
-  <script>
-    function calculate() {
-      // Base resources
-      const baseExp = 7800000;
-      const baseGold = 13100000;
+  <div class="card">
+    <h2>Your Resources</h2>
+    <label for="greenExp">Green EXP Books:</label>
+    <input type="number" id="greenExp" value="0" min="0">
 
-      // Inputs
-      const threeStar = parseInt(document.getElementById('threeStar').value) || 0;
-      const fourStar = parseInt(document.getElementById('fourStar').value) || 0;
+    <label for="blueExp">Blue EXP Books:</label>
+    <input type="number" id="blueExp" value="0" min="0">
 
-      // Each character reductions
-      const expReduction = (threeStar * 15200) + (fourStar * 155040);
-      const goldReduction = (threeStar * 100000) + (fourStar * 300000);
+    <label for="greenAsc">Green Ascension Books:</label>
+    <input type="number" id="greenAsc" value="0" min="0">
 
-      // Final values
-      const finalExp = Math.max(baseExp - expReduction, 0);
-      const finalGold = Math.max(baseGold - goldReduction, 0);
+    <label for="blueAsc">Blue Ascension Books:</label>
+    <input type="number" id="blueAsc" value="0" min="0">
 
-      // Format with commas
-      const expFormatted = finalExp.toLocaleString();
-      const goldFormatted = finalGold.toLocaleString();
+    <label for="purpleAsc">Purple Ascension Books:</label>
+    <input type="number" id="purpleAsc" value="0" min="0">
 
-      // Display result
-      document.getElementById('results').innerHTML = `
-        <strong>Final EXP Needed:</strong> ${expFormatted}<br>
-        <strong>Final Gold Needed:</strong> ${goldFormatted}
-      `;
-    }
-  </script>
+    <label for="goldAsc">Gold Ascension Books:</label>
+    <input type="number" id="goldAsc" value="0" min="0">
+  </div>
+</div>
+
+<div class="container">
+  <div class="card results" id="results">
+    <h2>Results</h2>
+    <p id="expNeeded">EXP Needed: 0</p>
+    <p id="goldNeeded">Gold Needed: 0</p>
+    <p id="ascNeeded">Ascension Books Needed: 0</p>
+    <button id="copyBtn">Copy Results</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="card">
+    <button onclick="toggleDetails()">Show/Hide Detailed Table</button>
+    <div class="details" id="detailsTable">
+      <h3>Detailed EXP & Ascension Table</h3>
+      <p>All values are automatically calculated based on level ranges and your input resources.</p>
+      <table style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr style="border-bottom: 1px solid #fff;">
+            <th>Level Range</th>
+            <th>EXP</th>
+            <th>Gold</th>
+            <th>Green Books</th>
+            <th>Blue Books</th>
+            <th>Purple Books</th>
+            <th>Gold Books</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const expData = {
+  "1-20": {exp: 6100, gold: 12200, green: 61, blue: 0, purple: 0, goldBook: 0},
+  "20-40": {exp: 8560, gold: 171200, green: 856, blue: 12, purple: 0, goldBook: 0},
+  "40-60": {exp: 4100+573, gold: 820000+613400, green: 4100+4, blue: 50+392, purple: 16+58, goldBook: 0},
+  "60-70": {exp: 573, gold: 613400, green: 573, blue: 249, purple: 16, goldBook: 0},
+  "70-80": {exp: 4, gold: 784800, green: 4, blue: 392, purple: 20, goldBook: 0}
+};
+
+const startLevelEl = document.getElementById("startLevel");
+const targetLevelEl = document.getElementById("targetLevel");
+const greenExpEl = document.getElementById("greenExp");
+const blueExpEl = document.getElementById("blueExp");
+const greenAscEl = document.getElementById("greenAsc");
+const blueAscEl = document.getElementById("blueAsc");
+const purpleAscEl = document.getElementById("purpleAsc");
+const goldAscEl = document.getElementById("goldAsc");
+
+const expNeededEl = document.getElementById("expNeeded");
+const goldNeededEl = document.getElementById("goldNeeded");
+const ascNeededEl = document.getElementById("ascNeeded");
+const tableBodyEl = document.getElementById("tableBody");
+
+function calculate() {
+  const start = parseInt(startLevelEl.value);
+  const target = parseInt(targetLevelEl.value);
+  let totalExp = 0;
+  let totalGold = 0;
+
+  // Simplified calculation for this example
+  if(start < target){
+    if(start < 20 && target >=20) totalExp += 6100, totalGold += 12200;
+    if(start < 40 && target >=40) totalExp += 8560, totalGold += 171200;
+    if(start < 60 && target >=60) totalExp += 4100+573, totalGold += 820000+613400;
+    if(start < 70 && target >=70) totalExp += 573, totalGold += 613400;
+    if(start < 80 && target >=80) totalExp += 4, totalGold += 784800;
+  }
+
+  const userGreenExp = parseInt(greenExpEl.value);
+  const userBlueExp = parseInt(blueExpEl.value);
+  const expProvided = userGreenExp*100 + userBlueExp*1000;
+  const remainingExp = Math.max(totalExp - expProvided,0);
+
+  expNeededEl.textContent = "EXP Needed: " + remainingExp;
+  goldNeededEl.textContent = "Gold Needed: " + totalGold;
+
+  // Simplified ascension display (for full breakdown can expand)
+  const userTotalAsc = parseInt(greenAscEl.value) + parseInt(blueAscEl.value) + parseInt(purpleAscEl.value) + parseInt(goldAscEl.value);
+  const remainingAsc = Math.max(0,10 - userTotalAsc); // example
+  ascNeededEl.textContent = "Ascension Books Needed: " + remainingAsc;
+
+  // Table
+  tableBodyEl.innerHTML = `
+    <tr><td>1-20</td><td>${6100}</td><td>${12200}</td><td>61</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><td>20-40</td><td>${8560}</td><td>${171200}</td><td>856</td><td>12</td><td>0</td><td>0</td></tr>
+    <tr><td>40-60</td><td>${4100+573}</td><td>${820000+613400}</td><td>${4100+4}</td><td>${50+392}</td><td>${16+58}</td><td>0</td></tr>
+    <tr><td>60-70</td><td>573</td><td>613400</td><td>573</td><td>249</td><td>16</td><td>0</td></tr>
+    <tr><td>70-80</td><td>4</td><td>784800</td><td>4</td><td>392</td><td>20</td><td>0</td></tr>
+  `;
+}
+
+function toggleDetails() {
+  const details = document.getElementById("detailsTable");
+  details.style.display = details.style.display === "none" ? "block" : "none";
+}
+
+// Copy to clipboard
+document.getElementById("copyBtn").addEventListener("click", () => {
+  const text = `EXP Needed: ${expNeededEl.textContent}\nGold Needed: ${goldNeededEl.textContent}\n${ascNeededEl.textContent}`;
+  navigator.clipboard.writeText(text);
+  alert("Results copied to clipboard!");
+});
+
+startLevelEl.addEventListener("change", calculate);
+targetLevelEl.addEventListener("change", calculate);
+greenExpEl.addEventListener("input", calculate);
+blueExpEl.addEventListener("input", calculate);
+greenAscEl.addEventListener("input", calculate);
+blueAscEl.addEventListener("input", calculate);
+purpleAscEl.addEventListener("input", calculate);
+goldAscEl.addEventListener("input", calculate);
+
+calculate();
+</script>
+
 </body>
 </html>
